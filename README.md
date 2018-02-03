@@ -1,5 +1,5 @@
 # BESS-FastPath
-BESS-FastPath is a BESS system integrated with FastPath, which could be built and used as original [BESS](https://github.com/NetSys/bess) system. BESS-FastPath do not change the commands in bessctl and formats in bess files, original BESS users could use this system as usual.  First users could also run NFs easliy with following actions(mainliy copied from original page [Build and Install BESS](https://github.com/NetSys/bess/wiki/Build-and-Install-BESS))
+BESS-FastPath is a [BESS](https://github.com/NetSys/bess) system integrated with FastPath. BESS-FastPath do not change the commands in bessctl and formats in bess files, original BESS users could use this system as usual.  Users could also run NFs easliy with following actions(mainliy copied from original page [Build and Install BESS](https://github.com/NetSys/bess/wiki/Build-and-Install-BESS))
 ## Usage
 ### Host configuration
 BESS runs best under Ubuntu 16.04 LTS with Linux kernel 4.4.0 x86_64. It's easiest to start with a fresh install of the operating system.
@@ -50,11 +50,7 @@ You should now see a command prompt that says localhost:10514. This means that y
 ```run samples/flowgen```starts up a sample configuration of modules. bessd is not connected to any network interface cards or VMs so it creates its own packets to forward using a Source module; it then forwards them through an ACL module which filters out half of the packets (those that match a blacklisted term). ```monitor pipeline``` is a quick way to see how packets are flowing in your bessd configuration -- you can always type monitor pipeline to see all of the modules and ports in the system and how many packets per second are flowing through them (**Note: command ```monitor pipeline``` will not show packet number handled in Fast-Path**).
 
 ## Development
-This project have achieved several sample modules including ACL, NAT,  Load Balance, Flow Counter and Snort. Module Developer can easily modify other BESS modules into FastPath pattern (in foder ```core/modules/```). 
+We have developed several sample NFs (network functions, or modules in BESS) including ACL, NAT, Load Balance, Monitor (Flow Counter) and Snort. Developers can easily modify existing modules into FastPath paradigm (in foder ```core/modules/```). 
 
-In BESS-FastPath, The first module in a service chain which is usually in charge of receiving packets decides whether this service chain is running in FastPath model based on TCP or UDP flows.
-
-When system is running in FastPath model Every module acting as middlebox in BESS-FastPath needs to  register a HeadAction and a StateAction in LMAT(GMAT).
-
-The last modules in the service chain which are usually in charge of sending packets should set themselves as the out port of this service chain.
+During runtime, every NF acts as an module in the service chain, which needs to register a per-flow processing rule (containing Header Actions and State Functions). Then FastPath consolidate these rules together and build a logic-equivalent fast data path.
 
